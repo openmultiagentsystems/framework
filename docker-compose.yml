@@ -13,3 +13,29 @@ services:
         - '.env:/app/.env'
     working_dir: /app
     command: "fastapi dev main.py --host 0.0.0.0"
+  db:
+      container_name: database
+      image: 'pgvector/pgvector:pg17'
+      ports:
+          - '${FORWARD_DB_PORT:-5432}:5432'
+      environment:
+          PGPASSWORD: '${DB_PASSWORD:-secret}'
+          POSTGRES_DB: '${DB_DATABASE}'
+          POSTGRES_USER: '${DB_USERNAME}'
+          POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+      volumes:
+          - 'db_data:/var/lib/postgresql/data'
+          - './app/migrations/init.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
+      networks:
+          - framework_net
+      healthcheck:
+          test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
+          retries: 3
+          timeout: 5s
+networks:
+  framework_net:
+      name: framework_net
+      driver: bridge
+volumes:
+  db_data:
+      driver: local
