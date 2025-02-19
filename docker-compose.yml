@@ -12,4 +12,4 @@ services:
         - './app:/app'
         - '.env:/app/.env'
     working_dir: /app
-    command: "fastapi run main.py"
+    command: "fastapi dev main.py --host 0.0.0.0"
