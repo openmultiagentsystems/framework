@@ -172,3 +172,12 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Gradle files
+**/.gradle/
+
+# Netlogo output files
+legacy/netlogo_output/*.txt
+
+# Specific ASL files if you want to ignore them
+legacy/jacamo/jacamo_model/src/agt/list/*.asl
