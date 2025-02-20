@@ -1,5 +1,6 @@
 services:
   omas_interface:
+    container_name: 'omas_interface'
     tty: true
     build:
       context: .
@@ -13,8 +14,8 @@ services:
         - '.env:/app/.env'
     working_dir: /app
     command: "fastapi dev main.py --host 0.0.0.0"
-  database:
-      container_name: database
+  omas_database:
+      container_name: 'omas_database'
       image: 'pgvector/pgvector:pg17'
       ports:
           - '${FORWARD_DB_PORT:-5432}:5432'
@@ -26,8 +27,6 @@ services:
       volumes:
           - 'db_data:/var/lib/postgresql/data'
           - './app/migrations/init.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
-      networks:
-          - framework_net
       healthcheck:
           test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
           retries: 3
@@ -201,9 +200,6 @@ services:
       - clear_files
 
 networks:
-  framework_net:
-      name: framework_net
-      driver: bridge
   my_network:
     name: my_network
     driver: bridge
