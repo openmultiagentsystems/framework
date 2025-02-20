@@ -1,0 +1,62 @@
+version: "3.8"
+services:      
+  clear_files:
+    container_name: clear_files
+    build:
+      context: .
+      dockerfile: Dockerfile_PYTHON
+    tty: true           # Container alive
+    command: "python3 /shared_volume/clean_simulation_files.py"
+    environment:
+    - PYTHONUNBUFFERED=1
+    volumes:
+      - ./shared_volume:/shared_volume
+    networks:
+      - my_network
+
+  model_1:
+    container_name: model_1
+    build:
+      context: .
+      dockerfile: Dockerfile_NETLOGO
+    tty: true           # Container alive
+    command: "/bin/sh -c 'python3 /shared_volume/python_execute_netlogo.py >> /shared_volume/netlogo_output/m1_output.txt'"
+    environment:
+    - PYTHONUNBUFFERED=1
+    - my_hostname=model_1
+    - model_file=/shared_volume/sugarscape_m1.nlogo
+    - experiment=experiment1
+    - auto_run=True
+    - host=144.22.197.41
+    volumes:
+      - ./shared_volume:/shared_volume
+    networks:
+      - my_network
+    depends_on:
+      - "clear_files"
+
+  model_2:
+    container_name: model_2
+    build:
+      context: .
+      dockerfile: Dockerfile_NETLOGO
+    tty: true           # Container alive
+    command: "/bin/sh -c 'python3 /shared_volume/python_execute_netlogo.py >> /shared_volume/netlogo_output/m2_output.txt'"
+    environment:
+    - PYTHONUNBUFFERED=1
+    - my_hostname=model_2
+    - model_file=/shared_volume/sugarscape_m2.nlogo
+    - experiment=experiment1
+    - auto_run=True
+    - host=144.22.197.41
+    volumes:
+      - ./shared_volume:/shared_volume
+    networks:
+      - my_network
+    depends_on:
+      - "clear_files"
+
+networks:
+  my_network:
+    name: my_network
+    driver: bridge
