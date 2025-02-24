@@ -14,21 +14,4 @@ conn = psycopg2.connect(
     port=os.getenv('DB_PORT')
 )
 
-
-#
-# url = URL.create(
-#     "postgresql",
-#     os.getenv('DB_USERNANE'),
-#     os.getenv('DB_PASSWORD'),
-#     os.getenv('DB_HOST'),
-#     os.getenv('DB_PORT'),
-#     os.getenv('DB_DATABASE'),
-# )
-#
-# engine = create_engine(url)
-# con = engine.connect()
-
-# cur = conn.cursor()
-#
-# cur.execute("SELECT * FROM m1")
-# cur.fetchall()
+cursor = conn.cursor()
