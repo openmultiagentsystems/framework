@@ -14,6 +14,8 @@ services:
         - '.env:/app/.env'
     working_dir: /app
     command: "fastapi dev main.py --host 0.0.0.0"
+    depends_on:
+      - 'omas_database'
 
   omas_database:
       container_name: 'omas_database'
@@ -33,41 +35,51 @@ services:
           retries: 3
           timeout: 5s
 
+  omas_rabbitmq:
+    container_name: 'omas_rabbitmq'
+    image: 'rabbitmq:4.0-management'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
   omas_register:
     container_name: 'omas_register'
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile_register
+    command: "/bin/sh -c 'python3 main.py'"
+    working_dir: /register
     tty: true
-
-  omas_model_1:
-    container_name: omas_model_1
-    build:
-      context: .
-      dockerfile: Dockerfile_NETLOGO
-    tty: true           # Container alive
-    command: "/bin/sh -c 'python3 /multiagent_models/netlogo/main.py >> /multiagent_models/netlogo/m1/m1_output.txt'"
-    environment:
-        - PYTHONUNBUFFERED=1
-        - my_hostname=omas_model_1
-        - model_file=/multiagent_models/netlogo/m1/sugarscape_m1.nlogo
-        - experiment=experiment1
-        - auto_run=True
-        - host=api
     volumes:
-      - ./multiagent_models/netlogo:/multiagent_models/netlogo
-    networks:
-      - my_network
+      - './register:/register'
+    depends_on:
+      omas_rabbitmq:
+        condition: service_healthy
 
-  omas_register:
-    container_name: omas_register
-    tty: true
-    build:
-      context: .
-      dockerfile: ./Dockerfiles/Dockerfile_register
-    volumes:
-        - './register:/register'
-
+  # omas_model_1:
+  #   container_name: omas_model_1
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile_NETLOGO
+  #   tty: true           # Container alive
+  #   command: "/bin/sh -c 'python3 /multiagent_models/netlogo/main.py >> /multiagent_models/netlogo/m1/m1_output.txt'"
+  #   environment:
+  #       - PYTHONUNBUFFERED=1
+  #       - my_hostname=omas_model_1
+  #       - model_file=/multiagent_models/netlogo/m1/sugarscape_m1.nlogo
+  #       - experiment=experiment1
+  #       - auto_run=True
+  #       - host=api
+  #   volumes:
+  #     - ./multiagent_models/netlogo:/multiagent_models/netlogo
+  #   networks:
+  #     - my_network
 
 ##############################
 # BELOW ALL LEGACY CONTAINERS#
@@ -236,10 +248,10 @@ services:
 #     depends_on:
 #       - clear_files
 #
-networks:
-  my_network:
-    name: my_network
-    driver: bridge
+# networks:
+#   my_network:
+#     name: my_network
+#     driver: bridge
 volumes:
   db_data:
       driver: local
