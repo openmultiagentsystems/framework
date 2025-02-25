@@ -32,8 +32,8 @@ services:
           - './app/migrations/init.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
       healthcheck:
           test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
-          retries: 3
-          timeout: 5s
+          # retries: 3
+          # timeout: 5s
 
   omas_rabbitmq:
     container_name: 'omas_rabbitmq'
@@ -43,10 +43,6 @@ services:
       - '15672:15672'
     healthcheck:
       test: rabbitmq-diagnostics -q ping
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 10s
 
   omas_register:
     container_name: 'omas_register'
@@ -62,24 +58,25 @@ services:
       omas_rabbitmq:
         condition: service_healthy
 
-  # omas_model_1:
-  #   container_name: omas_model_1
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile_NETLOGO
-  #   tty: true           # Container alive
-  #   command: "/bin/sh -c 'python3 /multiagent_models/netlogo/main.py >> /multiagent_models/netlogo/m1/m1_output.txt'"
-  #   environment:
-  #       - PYTHONUNBUFFERED=1
-  #       - my_hostname=omas_model_1
-  #       - model_file=/multiagent_models/netlogo/m1/sugarscape_m1.nlogo
-  #       - experiment=experiment1
-  #       - auto_run=True
-  #       - host=api
-  #   volumes:
-  #     - ./multiagent_models/netlogo:/multiagent_models/netlogo
-  #   networks:
-  #     - my_network
+  omas_model_1:
+    container_name: omas_model_1
+    build:
+      context: .
+      dockerfile: Dockerfile_NETLOGO
+    tty: true
+    command: "/bin/sh -c 'python3 /multiagent_models/netlogo/main.py >> /multiagent_models/netlogo/m1/m1_output.txt'"
+    environment:
+        - PYTHONUNBUFFERED=1
+        - my_hostname=omas_model_1
+        - model_file=/multiagent_models/netlogo/m1/sugarscape_m1.nlogo
+        - experiment=experiment1
+        - auto_run=True
+        - host=api
+    volumes:
+      - ./multiagent_models/netlogo:/multiagent_models/netlogo
+    depends_on:
+      omas_rabbitmq:
+        condition: service_healthy
 
 ##############################
 # BELOW ALL LEGACY CONTAINERS#

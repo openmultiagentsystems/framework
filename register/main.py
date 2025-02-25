@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 import pika
 import sys
 import os
@@ -12,10 +13,10 @@ def main():
     channel.queue_declare(queue='register')
 
     def callback(ch, method, properties, body):
-        print(f" [x] Received {body}")
+        print(f" [x] Received {body.decode()}")
 
     channel.basic_consume(
-        queue='hello', on_message_callback=callback, auto_ack=True)
+        queue='register', on_message_callback=callback, auto_ack=True)
 
     print(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()
