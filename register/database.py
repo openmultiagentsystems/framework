@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 
 import psycopg2
+from psycopg2.extras import execute_values
 
 load_dotenv()
 
@@ -16,10 +17,15 @@ conn = psycopg2.connect(
 
 
 def insert_agent(data):
-    sql = """
-        INSERT INTO agents (type_id, data, path)
-            VALUES (%s, %s::vector, %s)
-    """
+    sql = "INSERT INTO agents (type_id, data, path) VALUES %s"
 
-    conn.cursor().execute(sql, data)
+    execute_values(
+        conn.cursor(),
+        sql,
+        data,
+        template="(%s, %s::vector, %s)",
+        page_size=1000,
+        fetch=False
+    )
+
     conn.commit()

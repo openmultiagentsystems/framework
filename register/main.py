@@ -20,15 +20,17 @@ def main():
     def callback(ch, method, properties, body):
         print(f"Received {body.decode()}")
 
-        data = json.loads(body.decode())
+        model_data = json.loads(body.decode())
 
-        arr = []
-        for number in range(data['min'], data['max']):
+        data = []
+        for number in range(model_data['min'], model_data['max']):
+            arr = []
+
             arr.append(random.randint(5, 25))
             arr.append(random.randint(1, 4))
             arr.append(random.randint(1, 6))
 
-        data = [data['type_id'], str(arr), '']
+            data.append([model_data['type_id'], str(arr), ''])
 
         insert_agent(data)
 
