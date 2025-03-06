@@ -44,6 +44,14 @@ to setup
   set qtd_received_agents 0
   set qtd_received_agents_before 0
   set qtd_sended_agents 0
+
+end
+
+to setup-agent-handler
+  py:setup py:python3
+  py:run "import sys"
+  py:run "sys.path.append('/multiagent_models/netlogo')"
+  py:run "from agent_handler import request_to_register"
 end
 
 to new_setup
@@ -51,12 +59,11 @@ to new_setup
 end
 
 to new_request_to_register
+  setup-agent-handler
   print("NL: Python function - new_request_to_register")
   print("NL: On NetLogo, Start time of request_to_register")
   print(date-and-time)
-  py:setup py:python
   print("NL: Starting register: ")
-  py:run "from netlogo_agent_handler import request_to_register"
   let result py:runresult (word "request_to_register('" ("m1") "'" "," (1) ", " (400) ")")
   print("NL: return from register: ")
   print(result)
