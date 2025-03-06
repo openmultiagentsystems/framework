@@ -193,3 +193,7 @@ legacy/jacamo/jacamo_model/mas.log
 legacy/jacamo/jacamo_model/mas.log.lck
 
 legacy/netlogo_output/tests/**
+
+legacy/
+
+*.txt
