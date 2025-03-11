@@ -47,12 +47,22 @@ to setup
 
 end
 
-to setup-agent-handler
+to setup-python3
   py:setup py:python3
   py:run "import sys"
   py:run "sys.path.append('/multiagent_models/netlogo')"
-  py:run "from agent_handler import request_to_register"
 end
+
+to setup-agent-handler
+	setup-python3
+	py:run "from agent_handler import request_to_register"
+end
+
+to setup-receiving-agents
+	setup-python3
+	py:run "from agent_handler import receiving_agents"
+end
+
 
 to new_setup
   load-config-from-file2
@@ -256,8 +266,9 @@ to new_check_new_agent
   print("NL: Python Function - new_check_new_agent")
   print("NL: NetLogo, Start time - new_check_new_agent")
   print(date-and-time)
-  py:setup py:python
-  py:run "from netlogo_agent_handler import receiving_agents"
+
+  setup-receiving-agents
+
   let result py:runresult (word "receiving_agents('" ("m1") "')")
   print("NL: receiving_agents: -----------")
   print("NL: All agents to be processed:")
@@ -825,7 +836,7 @@ to go
     if sugar <= 0
     [
       set dead_agents lput agent_id dead_agents
-      new_send_agent_to_model
+      ;new_send_agent_to_model
       ;print "agent died, sending to other model"
       die
     ]

@@ -1,1 +1,2 @@
-from .connection import cursor  # Replace with whatever you want to export
+# Replace with whatever you want to export
+from .connection import cursor, conn, update_processed

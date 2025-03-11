@@ -3,6 +3,10 @@
 import pika
 import json
 
+import time
+import os
+import requests
+
 from enum import Enum
 
 
@@ -18,8 +22,17 @@ connection = pika.BlockingConnection(
 channel = connection.channel()
 channel.queue_declare(queue='register')
 
+API_URL = 'http://omas_interface:8000/check_new_agents'
+
 if __name__ == '__main__':
     print("")
+
+
+def host_port():
+    """ Internal function, to inform host and port to access the API """
+    host = os.environ['host']
+    port = "5000"
+    return host, port
 
 
 def request_to_register(model, min, max):
@@ -52,3 +65,17 @@ def request_to_register(model, min, max):
     connection.close()
 
     return True
+
+
+def receiving_agents(modelo):
+    """
+        Function used by NetLogo to receive agents from the platform.
+        It receives an agent from the API and inserts it into the simulation.
+        Calls the check_new_agents endpoint on API
+    """
+
+    response = requests.get(API_URL, params={"model": modelo}, timeout=120)
+
+    return_list = response.json()
+
+    return return_list

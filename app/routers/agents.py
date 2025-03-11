@@ -1,16 +1,16 @@
 from fastapi import APIRouter
-from app.database import cursor
+from app.database import update_processed
 
 router = APIRouter()
 
 
-@router.get('/agents/register')
-def register():
+@router.get('/check_new_agents')
+def check_new_agents(model: str | None = None):
     """
-        Register an agent on the platform.
+        Update all records that have processed = false
+        and return the ones that were actually updated.
     """
 
-    cursor.execute("SELECT * FROM m1")
-    result = cursor.fetchall()
+    updatedRows = update_processed()
 
-    return {"results": result}
+    return updatedRows
