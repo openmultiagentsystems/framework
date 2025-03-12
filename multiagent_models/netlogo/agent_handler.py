@@ -22,7 +22,7 @@ connection = pika.BlockingConnection(
 channel = connection.channel()
 channel.queue_declare(queue='register')
 
-API_URL = 'http://omas_interface:8000/check_new_agents'
+API_URL = 'http://omas_interface:8000/'
 
 if __name__ == '__main__':
     print("")
@@ -74,8 +74,18 @@ def receiving_agents(modelo):
         Calls the check_new_agents endpoint on API
     """
 
-    response = requests.get(API_URL, params={"model": modelo}, timeout=120)
+    url = API_URL + 'check_new_agents'
+    response = requests.get(url, params={"model": modelo}, timeout=120)
 
     return_list = response.json()
 
     return return_list
+
+
+def send_agent_to_router(agent_id, data, path):
+    url = API_URL + 'model_to_router'
+    json = {"agent_id": agent_id, "data": data, "path": path}
+
+    requests.post(url, json=json, timeout=120)
+
+    return True

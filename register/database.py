@@ -23,7 +23,7 @@ def insert_agent(data):
         conn.cursor(),
         sql,
         data,
-        template="(%s, %s::vector, %s)",
+        template="(%s, %s, %s)",
         page_size=1000,
         fetch=False
     )

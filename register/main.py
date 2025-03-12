@@ -26,11 +26,19 @@ def main():
         for number in range(model_data['min'], model_data['max']):
             arr = []
 
-            arr.append(random.randint(5, 25))
-            arr.append(random.randint(1, 4))
-            arr.append(random.randint(1, 6))
+            arr.append('[')
+            arr.append(str(random.randint(5, 25)))
+            arr.append(' ')
 
-            data.append([model_data['type_id'], str(arr), ''])
+            arr.append(str(random.randint(1, 4)))
+            arr.append(' ')
+
+            arr.append(str(random.randint(1, 6)))
+            arr.append(']')
+
+            arr_string = "".join(arr)
+
+            data.append([model_data['type_id'], str(arr_string), ''])
 
         insert_agent(data)
 

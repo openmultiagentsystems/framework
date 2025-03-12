@@ -1,7 +1,14 @@
 from fastapi import APIRouter
-from app.database import update_processed
+from app.database import update_processed, insert_to_router
+from pydantic import BaseModel
 
 router = APIRouter()
+
+
+class Router(BaseModel):
+    agent_id: str
+    data: str
+    path: str
 
 
 @router.get('/check_new_agents')
@@ -14,3 +21,13 @@ def check_new_agents(model: str | None = None):
     updatedRows = update_processed()
 
     return updatedRows
+
+
+@router.post('/model_to_router')
+def model_to_router(data: Router):
+    """
+    """
+
+    insert_to_router(data)
+
+    return True

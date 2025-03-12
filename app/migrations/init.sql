@@ -10,7 +10,7 @@ CReATE TABLE models_types (
 CREATE TABLE agents (
   id BIGINT GENERATED ALWAYS AS IDENTITY,
   type_id SMALLINT NOT NULL,
-  data vector NOT NULL,
+  data VARCHAR(255) NOT NULL,
   path TEXT NOT NULL,
   asl_file_path VARCHAR(255) NOT NULL DEFAULT '',
   processed BOOLEAN NOT NULL DEFAULT FALSE,

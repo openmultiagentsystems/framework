@@ -63,6 +63,12 @@ to setup-receiving-agents
 	py:run "from agent_handler import receiving_agents"
 end
 
+to setup-send-agent-to-router
+	setup-python3
+	py:run "from agent_handler import send_agent_to_router"
+end
+
+
 
 to new_setup
   load-config-from-file2
@@ -111,9 +117,10 @@ to request_to_register
 end
 
 to new_send_agent_to_model
+	setup-send-agent-to-router
   print("NL: Python function - new_send_agent_to_model")
-  py:setup py:python
-  py:run "from netlogo_agent_handler import send_agent_to_router"
+  ;py:setup py:python
+  ;py:run "from netlogo_agent_handler import send_agent_to_router"
   ; "send_agent_to_router('12', '[1 2 3]', '1-1')"
 
   let updated_historic ""
@@ -836,7 +843,7 @@ to go
     if sugar <= 0
     [
       set dead_agents lput agent_id dead_agents
-      ;new_send_agent_to_model
+      new_send_agent_to_model
       ;print "agent died, sending to other model"
       die
     ]
@@ -1568,7 +1575,7 @@ NetLogo 6.0.4
     <setup>setup</setup>
     <go>go</go>
     <final>export_output_to_File</final>
-    <timeLimit steps="1000"/>
+    <timeLimit steps="10"/>
     <metric>count turtles</metric>
     <enumeratedValueSet variable="visualization">
       <value value="&quot;no-visualization&quot;"/>

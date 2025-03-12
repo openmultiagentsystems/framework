@@ -3,7 +3,8 @@ import os
 from dotenv import load_dotenv
 
 import psycopg2
-from psycopg2.extras import execute_values
+# from psycopg2.extras import execute_values
+from fastapi.encoders import jsonable_encoder
 
 from pypika import Table, PostgreSQLQuery as Query
 
@@ -30,7 +31,7 @@ def update_processed():
 
     table = Table('agents')
     q = Query.update(table).set(table.processed, True).where(
-        table.processed.eq(False)).returning('*')
+        table.processed.eq(False)).returning('id', 'data', 'path')
 
     cursor.execute(q.get_sql())
 
@@ -39,3 +40,15 @@ def update_processed():
     conn.commit()
 
     return updatedRows
+
+
+def insert_to_router(model_data):
+
+    table = Table('router')
+    q = Query.into(table).columns('agent_id', 'data', 'path').insert(model_data.agent_id,
+                                                                     model_data.data, model_data.path)
+    cursor.execute(q.get_sql())
+
+    conn.commit()
+
+    return True
