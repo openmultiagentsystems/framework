@@ -68,6 +68,10 @@ to setup-send-agent-to-router
 	py:run "from agent_handler import send_agent_to_router"
 end
 
+to setup-send-agents-to-alive
+	setup-python3
+	py:run "from agent_handler import send_agent_to_alive"
+end
 
 
 to new_setup
@@ -347,7 +351,7 @@ print("NL: Python function - testing_python")
   py:setup py:python
 ;  py:run "from netlogo_agent_handler import testing_send"
 ;  let result py:runresult (word "testing_send('" "[" "\"" "agent" "\"" " " ("agent_id") " " ("sugar") " " ("metabolism") " " ("vision") " " (word "\"" (ticks) "-1" "\"") "]" "')")
-py:run "from netlogo_agent_handler import receiving_agents"
+; py:run "from netlogo_agent_handler import receiving_agents"
   let result py:runresult (word "receiving_agents('" ("m1") "')")
   print("NL: receiving_agents: -----------")
   print("NL: All agents to be processed:")
@@ -608,7 +612,7 @@ to check_new_agent
 end
 
 to print_alive_agents
-  let file_path "netlogo_output/m1_alive.txt"
+  let file_path "m1_alive.txt"
   file-open file_path
   let alive_agents ""
   foreach sort-on [agent_id] turtles
@@ -631,8 +635,7 @@ to print_alive_agents
   [
 
     print("NL: Python function  - send_agent_to_alive")
-    py:setup py:python
-    py:run "from netlogo_agent_handler import send_agent_to_alive"
+    setup-send-agents-to-alive
 
     ;let model "m1"
     let result py:runresult (word "send_agent_to_alive('" (alive_agents) "', 'm1')")
@@ -643,8 +646,10 @@ to print_alive_agents
 end
 
 to print_alive_agents_single
-  let file_path "netlogo_output/m1_alive.txt"
+  let file_path "m1_alive.txt"
   file-open file_path
+
+  
   foreach sort-on [agent_id] turtles
   [
     the-turtle -> ask the-turtle
@@ -653,8 +658,8 @@ to print_alive_agents_single
       file-write (agent_id)
 
       print("NL: Python Function - send_agent_to_alive")
-      py:setup py:python
-      py:run "from netlogo_agent_handler import send_agent_to_alive"
+
+    setup-send-agents-to-alive
 
       ;let model "m1"
       let result py:runresult (word "send_agent_to_alive('" (agent_id) "', 'm1')")

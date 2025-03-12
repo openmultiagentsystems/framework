@@ -28,13 +28,6 @@ if __name__ == '__main__':
     print("")
 
 
-def host_port():
-    """ Internal function, to inform host and port to access the API """
-    host = os.environ['host']
-    port = "5000"
-    return host, port
-
-
 def request_to_register(model, min, max):
     """
         Sends a message to the register to create
@@ -72,6 +65,12 @@ def receiving_agents(modelo):
         Function used by NetLogo to receive agents from the platform.
         It receives an agent from the API and inserts it into the simulation.
         Calls the check_new_agents endpoint on API
+
+        Args:
+            modelo: the name of the model that is sending the message
+
+        Returns:
+            List of agents that were just processed
     """
 
     url = API_URL + 'check_new_agents'
@@ -85,6 +84,26 @@ def receiving_agents(modelo):
 def send_agent_to_router(agent_id, data, path):
     url = API_URL + 'model_to_router'
     json = {"agent_id": agent_id, "data": data, "path": path}
+
+    requests.post(url, json=json, timeout=120)
+
+    return True
+
+
+def send_agent_to_alive(agent_id, model):
+    """
+        Function used by NetLogo, when the simulation is over.
+        It removes an agent from the simulation and sends it
+        to the API (to be inserted in alive_agents table).
+        Calls the model_to_alive endpoint on API
+
+        Args:
+            agent_id: the id of the agent corresponds to id in the agents table
+            model: the name of the model that is sending the message
+    """
+
+    url = API_URL + 'model_to_alive'
+    json = {"agent_id": agent_id, "model": model}
 
     requests.post(url, json=json, timeout=120)
 
