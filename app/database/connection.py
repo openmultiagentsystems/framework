@@ -57,7 +57,7 @@ def insert_to_router(model_data):
 def insert_to_alive(model_data):
 
     table = Table('alive_agents')
-    q = Query.into(table).columns('agent_id', 'model').insert('1', 'm1')
+    q = Query.into(table).columns('agent_id', 'model').insert(model_data.agent_id, model_data.model)
 
     for agent_id in model_data.agent_id.split(','):
         q = q.insert((agent_id, model_data.model))
