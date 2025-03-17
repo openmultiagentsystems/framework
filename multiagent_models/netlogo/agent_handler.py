@@ -16,13 +16,13 @@ class Model_Type(Enum):
 
 
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='omas_rabbitmq')
+    pika.ConnectionParameters(host='rabbitmq')
 )
 
 channel = connection.channel()
 channel.queue_declare(queue='register')
 
-API_URL = 'http://omas_interface:8000/'
+API_URL = 'http://api:8000/'
 
 if __name__ == '__main__':
     print("")
@@ -77,6 +77,8 @@ def receiving_agents(modelo):
     response = requests.get(url, params={"model": modelo}, timeout=120)
 
     return_list = response.json()
+
+    print(return_list)
 
     return return_list
 

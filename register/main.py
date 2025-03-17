@@ -11,7 +11,7 @@ from database import insert_agent
 
 def main():
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='omas_rabbitmq')
+        pika.ConnectionParameters(host='rabbitmq')
     )
     channel = connection.channel()
 

@@ -196,4 +196,5 @@ legacy/netlogo_output/tests/**
 
 legacy/
 
-*.txt
+multiagent_models/netlogo/m1/m1_alive.txt
+multiagent_models/netlogo/m1/m1_output.txt

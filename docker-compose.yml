@@ -1,6 +1,6 @@
 services:
-  omas_interface:
-    container_name: 'omas_interface'
+  api:
+    container_name: 'api'
     tty: true
     build:
       context: .
@@ -15,10 +15,10 @@ services:
     working_dir: /app
     command: "fastapi dev main.py --host 0.0.0.0"
     depends_on:
-      - 'omas_database'
+      - 'database'
 
-  omas_database:
-      container_name: 'omas_database'
+  database:
+      container_name: 'database'
       image: 'pgvector/pgvector:pg17'
       ports:
           - '${FORWARD_DB_PORT:-5432}:5432'
@@ -35,8 +35,8 @@ services:
           # retries: 3
           # timeout: 5s
 
-  omas_rabbitmq:
-    container_name: 'omas_rabbitmq'
+  rabbitmq:
+    container_name: 'rabbitmq'
     image: 'rabbitmq:4.0-management'
     ports:
       - '5672:5672'
@@ -44,8 +44,8 @@ services:
     healthcheck:
       test: rabbitmq-diagnostics -q ping
 
-  omas_register:
-    container_name: 'omas_register'
+  register:
+    container_name: 'register'
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile_register
@@ -55,11 +55,11 @@ services:
     volumes:
       - './register:/register'
     depends_on:
-      omas_rabbitmq:
+      rabbitmq:
         condition: service_healthy
 
-  omas_model_1:
-    container_name: omas_model_1
+  model_1:
+    container_name: model_1
     build:
       context: .
       dockerfile: Dockerfile_NETLOGO
@@ -67,7 +67,7 @@ services:
     command: "/bin/sh -c 'python3 /multiagent_models/netlogo/main.py >> /multiagent_models/netlogo/m1/m1_output.txt'"
     environment:
         - PYTHONUNBUFFERED=1
-        - my_hostname=omas_model_1
+        - my_hostname=model_1
         - model_file=/multiagent_models/netlogo/m1/sugarscape_m1.nlogo
         - experiment=experiment1
         - auto_run=True
@@ -75,7 +75,7 @@ services:
     volumes:
       - ./multiagent_models/netlogo:/multiagent_models/netlogo
     depends_on:
-      omas_rabbitmq:
+      rabbitmq:
         condition: service_healthy
 
 ##############################

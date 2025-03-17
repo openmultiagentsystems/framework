@@ -2,7 +2,7 @@ import pika
 import json
 
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='omas_rabbitmq')
+    pika.ConnectionParameters(host='rabbitmq')
 )
 
 channel = connection.channel()
