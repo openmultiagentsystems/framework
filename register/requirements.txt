@@ -1,5 +1,5 @@
 fastapi[standard]
 psycopg2-binary
 pgvector
-pypika
 pika
+python-dotenv
