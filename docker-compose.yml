@@ -58,6 +58,20 @@ services:
       rabbitmq:
         condition: service_healthy
 
+  router:
+    container_name: 'router'
+    build:
+      context: .
+      dockerfile: Dockerfiles/Dockerfile_router
+    command: "/bin/sh -c 'python3 main.py'"
+    working_dir: /router
+    tty: true
+    volumes:
+      - './router:/router'
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
   model_1:
     container_name: model_1
     build:

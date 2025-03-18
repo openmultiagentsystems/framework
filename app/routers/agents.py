@@ -2,6 +2,8 @@ from fastapi import APIRouter
 from app.database import update_processed, insert_to_router, insert_to_alive
 from pydantic import BaseModel
 
+import pika
+
 router = APIRouter()
 
 
@@ -44,5 +46,20 @@ def model_to_alive(data: Alive):
     """
 
     insert_to_alive(data)
+
+    connection = pika.BlockingConnection(
+        pika.ConnectionParameters(host='rabbitmq')
+    )
+
+    channel = connection.channel()
+    channel.queue_declare(queue='router')
+    channel.basic_publish(
+        exchange='',
+        routing_key='router',
+        body="hello"
+    )
+
+    connection.close()
+
 
     return True
