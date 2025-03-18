@@ -96,36 +96,11 @@ to request_to_register
   file-open path2
   file-print (word "" 1 " " initial-population)
   file-close
-;  if (not (file-exists? "request_new_agent.txt"))
-;  [
-;    file-open path2
-;    file-print (word "" 2 " " initial-population)
-;    file-close
-;
-;    let deleted false
-;
-;    while [deleted = false]
-;    [
-;      carefully
-;      [
-;        file-delete "request_new_agent.txt"
-;        print "file deleted"
-;        set deleted true
-;      ]
-;      [
-;        print error-message
-;      ]
-;    ]
-;  ]
-  ;print "---"
 end
 
 to new_send_agent_to_model
 	setup-send-agent-to-router
   print("NL: Python function - new_send_agent_to_model")
-  ;py:setup py:python
-  ;py:run "from netlogo_agent_handler import send_agent_to_router"
-  ; "send_agent_to_router('12', '[1 2 3]', '1-1')"
 
   let updated_historic ""
   ifelse (historic = "")
@@ -135,6 +110,7 @@ to new_send_agent_to_model
   [
     set updated_historic (word "" (historic) "-1")
   ]
+
   let tuple []
   set tuple lput sugar tuple
   set tuple lput metabolism tuple
@@ -142,86 +118,18 @@ to new_send_agent_to_model
 
   print("NL: sending this agent to router:")
   print(agent_id)
+
   let result py:runresult (word "send_agent_to_router('" (agent_id) "', '" tuple "', '" (updated_historic) "')")
 
   print("NL: Agent send successfully?")
   print (result)
-;  print("NL: Todos os agentes para processar:")
-;  print(result)
-;  print("NL: separados:")
-;  ifelse(length result > 0)
-;  [
-;    print("NL: entra primeiro if")
-;    foreach result
-;    [
-;      x ->
-;      print("NL: agente: ")
-;      print (x)
-;
-;      print("NL: agent_id:")
-;      print(item 0 x)
-;      print("NL: tuple intern:")
-;      print(item 1 x)
-;      print("NL: path:")
-;      print(item 2 x)
-;
-;      let tuple_intern read-from-string item 1 x
-;
-;      print("NL: tuple intern 0 - sugar:")
-;      print(item 0 tuple_intern)
-;      print("NL: tuple intern 1 - metabolism:")
-;      print(item 1 tuple_intern)
-;      print("NL: tuple intern 2 - vision:")
-;      print(item 2 tuple_intern)
-;
-;      create-turtles 1
-;      [
-;        set agent_id item 0 x
-;        ;set sugar item 2 line
-;        set sugar item 0 tuple_intern
-;        set metabolism item 1 tuple_intern
-;        set vision item 2 tuple_intern
-;        ;set historic word (item 5 line) "-2"
-;        set historic item 2 x
-;        print ("historic:")
-;        print (historic)
-;
-;        set shape "circle"
-;        move-to one-of patches with [not any? other turtles-here]
-;        ;set sugar random-in-range 5 25
-;        ;set metabolism random-in-range 1 4
-;        ;set vision random-in-range 1 6
-;        ;; turtles can look horizontally and vertically up to vision patches
-;        ;; but cannot look diagonally at all
-;        set vision-points []
-;        foreach (range 1 (vision + 1)) [ n ->
-;          set vision-points sentence vision-points (list (list 0 n) (list n 0) (list 0 (- n)) (list (- n) 0))
-;        ]
-;        run visualization
-;        print "new agent created from previous model"
-;      ]
-;    ]
-;  ]
-;  [
-;    print ("banco vazio")
-;  ]
-;  print("NL: fim receiving_agents: -----------")
 end
 
 to send_agent_to_model
   if (send_agents)
   [
-    ;let path2 "netlogo_output/send_agent.txt"
     let path2 (word "netlogo_output/1/out" (agent_id) ".txt")
     file-open path2
-    ;file-write (word "id:" random 3 ",action:" random 100)
-    ;breed [test_agents test_agent]
-
-    ;  foreach dead_agents
-    ;  [
-    ;    x -> file-write (word "" (x) "/" ("dead"))
-    ;    ;file-write (word "a")
-    ;  ]
 
     ifelse (historic = "")
     [
@@ -233,26 +141,10 @@ to send_agent_to_model
 
     ;file-print (word "[" "\"" "agent" "\"" " " (who) " " (sugar) " " (metabolism) " " (vision) " " "\"" (historic) "\"" "]")
 
-    ;  ask turtles
-    ;  [
-    ;    file-print (word "[" "\"" "agent" "\"" " " (agent_id) " " (sugar) " " (metabolism) " " (vision) "]")
-    ;    ;print (word "[" "\"" "agent" "\"" " " (agent_id) " " (sugar) " " (metabolism) " " (vision) "]")
-    ;  ]
     file-close
 
     set path2 "netlogo_output/general_send_agent.txt"
     file-open path2
-    ;file-write (word "id:" random 3 ",action:" random 100)
-    ;breed [test_agents test_agent]
-
-    ;  foreach dead_agents
-    ;  [
-    ;    x -> file-write (word "" (x) "/" ("dead"))
-    ;    ;file-write (word "a")
-    ;  ]
-
-    ;file-print (word "[" "\"" "agent" "\"" " " (who) " " (sugar) " " (metabolism) " " (vision) "]")
-    ;file-print (word "[" "\"" "agent" "\"" " " (who) " " (sugar) " " (metabolism) " " (vision) " " (historic) "]")
 
     ifelse (historic = "")
     [
@@ -264,11 +156,6 @@ to send_agent_to_model
 
     set qtd_sended_agents (qtd_sended_agents + 1)
 
-    ;  ask turtles
-    ;  [
-    ;    file-print (word "[" "\"" "agent" "\"" " " (agent_id) " " (sugar) " " (metabolism) " " (vision) "]")
-    ;    ;print (word "[" "\"" "agent" "\"" " " (agent_id) " " (sugar) " " (metabolism) " " (vision) "]")
-    ;  ]
     file-close
   ]
 end
@@ -349,10 +236,9 @@ end
 to testing_python
 print("NL: Python function - testing_python")
   py:setup py:python
-;  py:run "from netlogo_agent_handler import testing_send"
-;  let result py:runresult (word "testing_send('" "[" "\"" "agent" "\"" " " ("agent_id") " " ("sugar") " " ("metabolism") " " ("vision") " " (word "\"" (ticks) "-1" "\"") "]" "')")
-; py:run "from netlogo_agent_handler import receiving_agents"
+
   let result py:runresult (word "receiving_agents('" ("m1") "')")
+
   print("NL: receiving_agents: -----------")
   print("NL: All agents to be processed:")
   print(result)
@@ -400,7 +286,6 @@ to check_new_agent
   let files_to_check []
   if (file-exists? original_file)
   [
-    ;print("NL: existe arquivo original")
     file-open original_file
     while [not file-at-end?]
     [
@@ -415,8 +300,6 @@ to check_new_agent
   foreach files_to_check
   [
     x ->
-;    print("NL: linhas do primeiro arquivo:")
-;    print(x)
 
     if (file-exists? x)
     [
@@ -446,9 +329,6 @@ to check_new_agent
 
             set shape "circle"
             move-to one-of patches with [not any? other turtles-here]
-            ;set sugar random-in-range 5 25
-            ;set metabolism random-in-range 1 4
-            ;set vision random-in-range 1 6
             ;; turtles can look horizontally and vertically up to vision patches
             ;; but cannot look diagonally at all
             set vision-points []
@@ -476,139 +356,6 @@ to check_new_agent
     print(x)
     file-delete x
   ]
-
-;      if (file-exists? file_path)
-;      [
-;        print("NL: existe arquivo da linha")
-;        file-open file_path
-;        ;print "---"
-;        while [not file-at-end?]
-;        [
-;          let line file-read
-;          ifelse(item 0 line = "agent")
-;          [
-;            create-turtles 1
-;            [
-;              set agent_id item 1 line
-;              ;set sugar item 2 line
-;              set sugar 0
-;              set metabolism item 3 line
-;              set vision item 4 line
-;              ;set historic word (item 5 line) "-2"
-;              set historic item 5 line
-;              print ("historic:")
-;              print (historic)
-;
-;              set shape "circle"
-;              move-to one-of patches with [not any? other turtles-here]
-;              ;set sugar random-in-range 5 25
-;              ;set metabolism random-in-range 1 4
-;              ;set vision random-in-range 1 6
-;              ;; turtles can look horizontally and vertically up to vision patches
-;              ;; but cannot look diagonally at all
-;              set vision-points []
-;              foreach (range 1 (vision + 1)) [ n ->
-;                set vision-points sentence vision-points (list (list 0 n) (list n 0) (list 0 (- n)) (list (- n) 0))
-;              ]
-;              run visualization
-;              print "new agent created from previous model"
-;            ]
-;            set to_delete lput file_path to_delete
-;            set qtd_received_agents_before (qtd_received_agents_before + 1)
-;          ]
-;          [
-;            print "eee"
-;          ]
-;        ]
-;        file-close
-;;        file-close
-;;        print("NL: excluindo arquivo")
-;;        print(file_path)
-;;        file-delete file_path
-;      ]
-;    ]
-;  file-close
-;  ]
-;
-;  foreach to_delete
-;  [
-;    x ->
-;    print("NL: excluir:")
-;    print(x)
-;    ;file-write (word "a")
-;  ]
-;  file-close-all
-;  let original_file "netlogo_output/list_of_agents.txt"
-;  let to_delete []
-;  if (file-exists? original_file)
-;  [
-;    print("NL: existe arquivo original")
-;    file-open original_file
-;    while [not file-at-end?]
-;    [
-;      let file_path file-read
-;      print("NL: linha encontrada:")
-;      print(file_path)
-;      if (file-exists? file_path)
-;      [
-;        print("NL: existe arquivo da linha")
-;        file-open file_path
-;        ;print "---"
-;        while [not file-at-end?]
-;        [
-;          let line file-read
-;          ifelse(item 0 line = "agent")
-;          [
-;            create-turtles 1
-;            [
-;              set agent_id item 1 line
-;              ;set sugar item 2 line
-;              set sugar 0
-;              set metabolism item 3 line
-;              set vision item 4 line
-;              ;set historic word (item 5 line) "-2"
-;              set historic item 5 line
-;              print ("historic:")
-;              print (historic)
-;
-;              set shape "circle"
-;              move-to one-of patches with [not any? other turtles-here]
-;              ;set sugar random-in-range 5 25
-;              ;set metabolism random-in-range 1 4
-;              ;set vision random-in-range 1 6
-;              ;; turtles can look horizontally and vertically up to vision patches
-;              ;; but cannot look diagonally at all
-;              set vision-points []
-;              foreach (range 1 (vision + 1)) [ n ->
-;                set vision-points sentence vision-points (list (list 0 n) (list n 0) (list 0 (- n)) (list (- n) 0))
-;              ]
-;              run visualization
-;              print "new agent created from previous model"
-;            ]
-;            set to_delete lput file_path to_delete
-;            set qtd_received_agents_before (qtd_received_agents_before + 1)
-;          ]
-;          [
-;            print "eee"
-;          ]
-;        ]
-;        file-close
-;;        file-close
-;;        print("NL: excluindo arquivo")
-;;        print(file_path)
-;;        file-delete file_path
-;      ]
-;    ]
-;  file-close
-;  ]
-;
-;  foreach to_delete
-;  [
-;    x ->
-;    print("NL: excluir:")
-;    print(x)
-;    ;file-write (word "a")
-;  ]
 end
 
 to print_alive_agents
@@ -675,25 +422,6 @@ to load-config-from-file2
   while [not file-at-end?]
   [
     let line file-read
-    ;show item 1 line
-;    let item0 item 0 line
-;    let item1 item 1 line
-;    let item2 item 2 line
-;    let item3 item 3 line
-;    let item4 item 4 line
-
-;    print item0
-;    print item1
-;    print item2
-
-;    if(item0 = "num_agents")
-;    [
-;      set num_agents item1
-;      create-test_agents num_agents
-;      [
-;        print who + 1
-;      ]
-;    ]
 
     ifelse(item 0 line = "agent")
     [
@@ -737,28 +465,9 @@ end
 
 to export_output_to_File
   print("NL: ---------- End of simulation...")
-;  print("NL: AGENTES QUE ENTRARIAM NA SIMULACAO: ")
-;  py:setup py:python
-;  py:run "from netlogo_agent_handler import receiving_agents"
-;  let result py:runresult (word "receiving_agents('" ("m1") "')")
-;  ifelse(length result > 0)
-;  [
-;    print("NL: entra primeiro if")
-;    foreach result
-;    [
-;      x ->
-;
-;      ;print("NL: agent_id:")
-;      print(item 0 x)
-;    ]
-;  ]
-;  [
-;    print("NL: Nenhum agente para entrar na simulacao")
-;  ]
 
   print("NL: Alive agents: ")
   print_alive_agents
-;  export-output "netlogo_output/m1.txt"
   print("NL: ---------- END!")
 end
 
@@ -776,9 +485,6 @@ to print_agent_random
 
   ask turtles
   [
-;    print (who + 1)
-;    file-write (word "" (who + 1) "/" random 100)
-    ;print (who + 1)
     file-write (word "" (agent_id) "/" ("alive"))
   ]
   file-close
@@ -821,11 +527,6 @@ to go
   print("NL: ------------BEGIN TICK --------------")
   print("NL: Tick number: ")
   print(ticks)
-;  if (ticks = 1000)
-;  [
-;    stop
-;  ]
-;testing_python
 
   if (ticks = 1)
   [
@@ -834,10 +535,6 @@ to go
 
   new_check_new_agent
 
-
-;  if not any? turtles [
-;    stop
-;  ]
   ask patches [
     patch-growback
     patch-recolor
