@@ -64,7 +64,8 @@ services:
       context: .
       dockerfile: Dockerfile_NETLOGO
     tty: true
-    command: "/bin/sh -c 'python3 /multiagent_models/netlogo/main.py >> /multiagent_models/netlogo/m1/m1_output.txt'"
+    command: "tail -f"
+    # command: "/bin/sh -c 'python3 /multiagent_models/netlogo/main.py >> /multiagent_models/netlogo/m1/m1_output.txt'"
     environment:
         - PYTHONUNBUFFERED=1
         - my_hostname=model_1
