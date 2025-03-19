@@ -6,6 +6,7 @@ import os
 import json
 import random
 
+from database import get_router_data
 
 def main():
     connection = pika.BlockingConnection(
@@ -16,7 +17,8 @@ def main():
     channel.queue_declare(queue='router')
 
     def callback(ch, method, properties, body):
-        print(f"Received {body.decode()}")
+        data = get_router_data()
+        print(data)
 
 
     channel.basic_consume(

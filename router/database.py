@@ -15,17 +15,16 @@ conn = psycopg2.connect(
     port=os.getenv('DB_PORT')
 )
 
+cursor = conn.cursor()
 
-def insert_agent(data):
-    sql = "INSERT INTO agents (type_id, data, path) VALUES %s"
 
-    execute_values(
-        conn.cursor(),
-        sql,
-        data,
-        template="(%s, %s, %s)",
-        page_size=1000,
-        fetch=False
-    )
+def get_router_data():
+    sql = "SELECT id, agent_id, data, path, processed FROM router WHERE processed = false ORDER BY created_at ASC"
 
-    conn.commit()
+    cursor.execute(sql)
+
+    try:
+        return cursor.fetchall()
+    except:
+        return []
+
