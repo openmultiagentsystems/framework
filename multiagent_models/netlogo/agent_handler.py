@@ -6,6 +6,7 @@ import json
 import time
 import os
 import requests
+from requests import ConnectionError, ConnectTimeout, HTTPError
 
 from enum import Enum
 
@@ -60,7 +61,7 @@ def request_to_register(model, min, max):
     return True
 
 
-def receiving_agents(modelo):
+def receiving_agents(model):
     """
         Function used by NetLogo to receive agents from the platform.
         It receives an agent from the API and inserts it into the simulation.
@@ -74,13 +75,17 @@ def receiving_agents(modelo):
     """
 
     url = API_URL + 'check_new_agents'
-    response = requests.get(url, params={"model": modelo}, timeout=120)
 
-    return_list = response.json()
-
-    print(return_list)
-
-    return return_list
+    try:
+        response = requests.get(url, params={"model": model}, timeout=120)
+    except ConnectionError as ce:
+        # Implemente a database queue
+    except ConnectionTimeout as ct:
+        # Implemente a database queue
+    except HTTPError as he:
+        # Implemente a database queue
+    finally:
+        return = response.json()
 
 
 def send_agent_to_router(agent_id, data, path):
