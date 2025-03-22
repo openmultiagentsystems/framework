@@ -112,6 +112,13 @@ def send_agent_to_alive(agent_id, model):
     url = API_URL + 'model_to_alive'
     json = {"agent_id": agent_id, "model": model}
 
-    requests.post(url, json=json, timeout=120)
-
-    return True
+    try:
+        requests.post(url, json=json, timeout=120)
+    except ConnectionError as ce:
+        # Implemente a database queue
+    except ConnectionTimeout as ct:
+        # Implemente a database queue
+    except HTTPError as he:
+        # Implemente a database queue
+    finally:
+        return True
