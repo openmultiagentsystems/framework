@@ -92,9 +92,16 @@ def send_agent_to_router(agent_id, data, path):
     url = API_URL + 'model_to_router'
     json = {"agent_id": agent_id, "data": data, "path": path}
 
-    requests.post(url, json=json, timeout=120)
-
-    return True
+    try:
+        requests.post(url, json=json, timeout=120)
+    except ConnectionError as ce:
+        # Implemente a database queue
+    except ConnectionTimeout as ct:
+        # Implemente a database queue
+    except HTTPError as he:
+        # Implemente a database queue
+    finally:
+        return True
 
 
 def send_agent_to_alive(agent_id, model):
