@@ -3,8 +3,7 @@ import os
 from dotenv import load_dotenv
 
 import psycopg2
-# from psycopg2.extras import execute_values
-from fastapi.encoders import jsonable_encoder
+from psycopg2.extras import execute_values, RealDictCursor
 
 from pypika import Table, PostgreSQLQuery as Query
 
@@ -20,6 +19,18 @@ conn = psycopg2.connect(
 )
 
 cursor = conn.cursor()
+
+c = conn.cursor(cursor_factory=RealDictCursor)
+
+def get_agents_by_model_name(name: str):
+
+    table = Table('agents')
+    q = Query.from_(table).select('*')
+
+    c.execute(q.get_sql())
+    agents = c.fetchall()
+
+    return agents
 
 
 def update_processed():
