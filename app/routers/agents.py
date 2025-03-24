@@ -1,8 +1,9 @@
 from fastapi import APIRouter
-from app.database import update_processed, insert_to_router, insert_to_alive
+from app.database import update_processed, insert_to_router, insert_to_alive, get_agents_by_model_name
 from pydantic import BaseModel
 
 import pika
+import json
 
 router = APIRouter()
 
@@ -16,6 +17,14 @@ class Router(BaseModel):
 class Alive(BaseModel):
     agent_id: str
     model: str
+
+@router.get('/agents')
+def index():
+    """
+        Returns all agents by model name
+    """
+
+    return get_agents_by_model_name('')
 
 
 @router.get('/check_new_agents')
