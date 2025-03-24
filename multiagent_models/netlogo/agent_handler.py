@@ -3,10 +3,8 @@
 import pika
 import json
 
-import time
-import os
 import requests
-from requests import ConnectionError, ConnectTimeout, HTTPError
+from requests import ConnectionError, HTTPError
 
 from enum import Enum
 
@@ -77,15 +75,12 @@ def receiving_agents(model):
     url = API_URL + 'check_new_agents'
 
     try:
-        response = requests.get(url, params={"model": model}, timeout=120)
+        res = requests.get(url, params={"model": model}, timeout=120)
+        return res.json()
     except ConnectionError as ce:
-        # Implemente a database queue
-    except ConnectionTimeout as ct:
-        # Implemente a database queue
+        return False
     except HTTPError as he:
-        # Implemente a database queue
-    finally:
-        return = response.json()
+        return False
 
 
 def send_agent_to_router(agent_id, data, path):
@@ -95,11 +90,9 @@ def send_agent_to_router(agent_id, data, path):
     try:
         requests.post(url, json=json, timeout=120)
     except ConnectionError as ce:
-        # Implemente a database queue
-    except ConnectionTimeout as ct:
-        # Implemente a database queue
+        return False
     except HTTPError as he:
-        # Implemente a database queue
+        return False
     finally:
         return True
 
@@ -120,12 +113,10 @@ def send_agent_to_alive(agent_id, model):
     json = {"agent_id": agent_id, "model": model}
 
     try:
-        requests.post(url, json=json, timeout=120)
+        return requests.post(url, json=json, timeout=120)
     except ConnectionError as ce:
-        # Implemente a database queue
-    except ConnectionTimeout as ct:
-        # Implemente a database queue
+        return False
     except HTTPError as he:
-        # Implemente a database queue
+        return False
     finally:
         return True
