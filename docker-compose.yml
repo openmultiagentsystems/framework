@@ -63,7 +63,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile_router
-    command: "/bin/sh -c 'python3 main.py'"
+    command: "/bin/sh -c 'pymon main.py'"
     working_dir: /router
     tty: true
     volumes:
