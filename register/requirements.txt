@@ -3,3 +3,4 @@ psycopg2-binary
 pgvector
 pika
 python-dotenv
+py-mon
