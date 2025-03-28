@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-import pika
-import sys
-import os
 import json
+import os
 import random
+import sys
 
+import pika
 from database import insert_agent
 
 
@@ -38,7 +38,12 @@ def main():
 
             arr_string = "".join(arr)
 
-            data.append([model_data['type_id'], str(arr_string), ''])
+            data.append([
+                model_data['type_id'],
+                str(arr_string),
+                '',
+                model_data['model_id']
+            ])
 
         insert_agent(data)
 
