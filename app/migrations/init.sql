@@ -10,6 +10,7 @@ CReATE TABLE models_types (
 CREATE TABLE agents (
   id BIGINT GENERATED ALWAYS AS IDENTITY,
   type_id SMALLINT NOT NULL,
+  model_id BIGINT NOT NULL,
   data VARCHAR(255) NOT NULL,
   path TEXT NOT NULL,
   asl_file_path VARCHAR(255) NOT NULL DEFAULT '',
@@ -18,9 +19,16 @@ CREATE TABLE agents (
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   PRIMARY KEY(id),
-  CONSTRAINT fk_type_id FOREIGN KEY(type_id) REFERENCES models_types(id)
+  CONSTRAINT fk_type_id FOREIGN KEY(type_id) REFERENCES models_types(id),
+  CONSTRAINT fk_model_id FOREIGN KEY(model_id) REFERENCES models(id)
 );
 
+CREATE TABLE models (
+  id BIGINT GENERATED ALWAYS AS IDENTITY,
+  name VARCHAR(255) NOT NULL
+);
+
+INSERT INTO models (name) VALUES ('m1'), ('m2');
 INSERT INTO models_types (name) VALUES ('netlogo');
 
 CREATE TABLE m1 (
