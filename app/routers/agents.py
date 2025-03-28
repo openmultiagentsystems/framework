@@ -1,9 +1,9 @@
+import pika
 from fastapi import APIRouter
-from app.database import update_processed, insert_to_router, insert_to_alive, get_agents_by_model_name
 from pydantic import BaseModel
 
-import pika
-import json
+from app.database import (get_agents_by_model_name, insert_to_alive,
+                          insert_to_router, update_processed)
 
 router = APIRouter()
 
@@ -17,6 +17,7 @@ class Router(BaseModel):
 class Alive(BaseModel):
     agent_id: str
     model: str
+
 
 @router.get('/agents')
 def index():
@@ -65,10 +66,9 @@ def model_to_alive(data: Alive):
     channel.basic_publish(
         exchange='',
         routing_key='router',
-        body="hello"
+        body=data.model
     )
 
     connection.close()
-
 
     return True
