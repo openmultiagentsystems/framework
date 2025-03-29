@@ -49,7 +49,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile_register
-    command: "/bin/sh -c 'python3 main.py'"
+    command: "/bin/sh -c 'pymon main.py'"
     working_dir: /register
     tty: true
     volumes:
@@ -92,6 +92,36 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+
+  model_2:
+    container_name: model_2
+    build:
+      context: .
+      dockerfile: Dockerfile_NETLOGO
+    tty: true
+    command: "tail -f"
+    # command: "/bin/sh -c 'python3 /multiagent_models/netlogo/main.py >> /multiagent_models/netlogo/m1/m1_output.txt'"
+    environment:
+        - PYTHONUNBUFFERED=1
+        - my_hostname=model_2
+        - model_file=/multiagent_models/netlogo/m2/sugarscape_m2.nlogo
+        - experiment=experiment2
+        - auto_run=True
+        - host=api
+    volumes:
+      - ./multiagent_models/netlogo:/multiagent_models/netlogo
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  pgadmin:
+    container_name: pgadmin
+    image: "dpage/pgadmin4"
+    ports:
+      - "8080:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@mail.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
 
 ##############################
 # BELOW ALL LEGACY CONTAINERS#
