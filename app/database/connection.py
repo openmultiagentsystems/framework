@@ -1,12 +1,10 @@
 import os
 
-from dotenv import load_dotenv
-
 import psycopg2
-from psycopg2.extras import execute_values, RealDictCursor
-
-from pypika import Table, PostgreSQLQuery as Query
-
+from dotenv import load_dotenv
+from psycopg2.extras import RealDictCursor, execute_values
+from pypika import PostgreSQLQuery as Query
+from pypika import Table
 
 load_dotenv()
 
@@ -18,9 +16,12 @@ conn = psycopg2.connect(
     port=os.getenv('DB_PORT')
 )
 
+conn.autocommit = True
+
 cursor = conn.cursor()
 
 c = conn.cursor(cursor_factory=RealDictCursor)
+
 
 def get_agents_by_model_name(name: str):
 
@@ -44,13 +45,17 @@ def update_processed():
     q = Query.update(table).set(table.processed, True).where(
         table.processed.eq(False)).returning('id', 'data', 'path')
 
-    cursor.execute(q.get_sql())
+    updatedRows = []
+    try:
+        cursor.execute(q.get_sql())
+        updatedRows = cursor.fetchall()
+    except psycopg2.OperationalError as e:
+        print(str(e))
+    finally:
+        return updatedRows
 
-    updatedRows = cursor.fetchall()
 
-    conn.commit()
 
-    return updatedRows
 
 
 def insert_to_router(model_data):
