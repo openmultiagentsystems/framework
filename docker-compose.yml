@@ -27,6 +27,7 @@ services:
           POSTGRES_DB: '${DB_DATABASE}'
           POSTGRES_USER: '${DB_USERNAME}'
           POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+          POSTGRES_EXTENSIONS: system_stats
       volumes:
           - 'db_data:/var/lib/postgresql/data'
           - './app/migrations/init.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
@@ -116,7 +117,7 @@ services:
 
   pgadmin:
     container_name: pgadmin
-    image: "dpage/pgadmin4"
+    image: "dpage/pgadmin4:9.1.0"
     ports:
       - "8080:80"
     environment:
