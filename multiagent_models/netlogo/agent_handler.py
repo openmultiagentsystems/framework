@@ -25,6 +25,11 @@ class Model_Type(Enum):
     JACAMO = 2
 
 
+MODELS = {
+    'm1': 1,
+    'm2': 2,
+}
+
 connection = pika.BlockingConnection(
     pika.ConnectionParameters(host="rabbitmq")
 )
@@ -61,13 +66,14 @@ def request_to_register(model, min, max):
     logger.info('with the following data:')
     logger.info('type_id: ' + str(Model_Type.NETLOGO.value))
     logger.info('model: ' + str(model))
+    logger.info('model_id: ')
     logger.info('min: ' + str(min))
     logger.info('max: ' + str(max))
     logger.info('')
 
     data = json.dumps({
         "type_id": Model_Type.NETLOGO.value,
-        "model": model,
+        "model_id": MODELS[model],
         "min": min,
         "max": max
     })
