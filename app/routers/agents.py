@@ -47,16 +47,6 @@ def model_to_router(data: Router):
 
     insert_to_router(data)
 
-    return True
-
-
-@router.post('/model_to_alive')
-def model_to_alive(data: Alive):
-    """
-    """
-
-    insert_to_alive(data)
-
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(host='rabbitmq')
     )
@@ -70,5 +60,15 @@ def model_to_alive(data: Alive):
     )
 
     connection.close()
+
+    return True
+
+
+@router.post('/model_to_alive')
+def model_to_alive(data: Alive):
+    """
+    """
+
+    insert_to_alive(data)
 
     return True
