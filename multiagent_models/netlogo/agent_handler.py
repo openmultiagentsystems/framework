@@ -66,7 +66,6 @@ def request_to_register(model, min, max):
     logger.info('with the following data:')
     logger.info('type_id: ' + str(Model_Type.NETLOGO.value))
     logger.info('model: ' + str(model))
-    logger.info('model_id: ')
     logger.info('min: ' + str(min))
     logger.info('max: ' + str(max))
     logger.info('')
@@ -120,7 +119,7 @@ def receiving_agents(model):
         return False
 
 
-def send_agent_to_router(agent_id, data, path):
+def send_agent_to_router(agent_id, data, path, model_name):
     """
         Function used by NetLogo, to send agents to the platform.
         It removes an agent from the simulation and sends it
@@ -145,7 +144,8 @@ def send_agent_to_router(agent_id, data, path):
     json = {
         "agent_id": agent_id,
         "data": data,
-        "path": path
+        "path": path,
+        "model_name": model_name
     }
 
     try:

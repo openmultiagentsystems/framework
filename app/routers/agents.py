@@ -1,9 +1,11 @@
-import pika
 from fastapi import APIRouter
 from pydantic import BaseModel
 
+from app.config import get_strategy
+from app.context_strategy import Context
 from app.database import (get_agents_by_model_name, insert_to_alive,
                           insert_to_router, update_processed)
+from app.strategies.send_to_another import SendToAnother
 
 router = APIRouter()
 
@@ -12,6 +14,7 @@ class Router(BaseModel):
     agent_id: str
     data: str
     path: str
+    model_name: str
 
 
 class Alive(BaseModel):
@@ -45,21 +48,23 @@ def model_to_router(data: Router):
     """
     """
 
-    insert_to_router(data)
+    context = Context(get_strategy(data))
+    context.run()
+    # insert_to_router(data)
 
-    connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='rabbitmq')
-    )
-
-    channel = connection.channel()
-    channel.queue_declare(queue='router')
-    channel.basic_publish(
-        exchange='',
-        routing_key='router',
-        body=data.model
-    )
-
-    connection.close()
+    # connection = pika.BlockingConnection(
+    #     pika.ConnectionParameters(host='rabbitmq')
+    # )
+    #
+    # channel = connection.channel()
+    # channel.queue_declare(queue='router')
+    # channel.basic_publish(
+    #     exchange='',
+    #     routing_key='router',
+    #     body=data.model
+    # )
+    #
+    # connection.close()
 
     return True
 

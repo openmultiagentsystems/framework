@@ -119,7 +119,8 @@ to new_send_agent_to_model
   print("NL: sending this agent to router:")
   print(agent_id)
 
-  let result py:runresult (word "send_agent_to_router('" (agent_id) "', '" tuple "', '" (updated_historic) "')")
+  let result py:runresult (word "send_agent_to_router('" (agent_id) "', '" tuple "', '" (updated_historic) "', '" ("m1") "')")
+
 
   print("NL: Agent send successfully?")
   print (result)
