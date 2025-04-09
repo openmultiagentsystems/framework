@@ -106,7 +106,7 @@ def receiving_agents(model):
     try:
         res = requests.get(
             CHECK_NEW_AGENT_URL,
-            params={"model": model},
+            params={"model": MODELS[model]},
             timeout=120
         )
 

@@ -4,8 +4,7 @@ from pydantic import BaseModel
 from app.config import get_strategy
 from app.context_strategy import Context
 from app.database import (get_agents_by_model_name, insert_to_alive,
-                          insert_to_router, update_processed)
-from app.strategies.send_to_another import SendToAnother
+                          insert_to_router, set_out_of_model, update_processed)
 
 router = APIRouter()
 
@@ -38,7 +37,7 @@ def check_new_agents(model: str | None = None):
         and return the ones that were actually updated.
     """
 
-    updatedRows = update_processed()
+    updatedRows = update_processed(model)
 
     return updatedRows
 
@@ -48,7 +47,9 @@ def model_to_router(data: Router):
     """
     """
 
-    context = Context(get_strategy(data))
+    strategy = get_strategy(data)
+
+    context = Context(strategy(data))
     context.run()
     # insert_to_router(data)
 

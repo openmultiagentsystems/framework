@@ -1,19 +1,17 @@
-# from database import update_unprocessed
-
 from app.context_strategy import Strategy
+from app.database import conn
 
 
-class SendToM1(Strategy):
+class send_to_m2(Strategy):
     def __init__(self, data):
         self.data = data
 
-    def run(self, name: str) -> None:
+    def run(self) -> None:
+        sql = "update agents set data = %s, path = %s, processed = false, model_id = 2 where id = %s"
 
-        # update_unprocessed(self.data)
+        tuple = (self.data.data, self.data.path, self.data.agent_id)
 
-        end_of_line = {
-            'm1': 'm2',
-            'm2': 'm1'
-        }
+        c = conn.cursor()
+        c.execute(sql, tuple)
 
-        # stm = end_of_line[name]
+        conn.commit()

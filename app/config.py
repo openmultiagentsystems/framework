@@ -1,4 +1,5 @@
 from app.strategies.send_to_m1 import send_to_m1
+from app.strategies.send_to_m2 import send_to_m2
 
 
 def get_name(data: dict):
@@ -34,8 +35,8 @@ def get_strategy(data: dict):
     """
 
     strategies = {
-        'm1': send_to_m1,
-        # 'm2': SendToAnother,
+        'm1': send_to_m2,
+        'm2': send_to_m1,
     }
 
     return strategies[get_name(data)]
