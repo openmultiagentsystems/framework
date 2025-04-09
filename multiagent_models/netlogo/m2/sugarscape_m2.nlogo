@@ -105,10 +105,10 @@ to new_send_agent_to_model
   let updated_historic ""
   ifelse (historic = "")
   [
-    set updated_historic 1
+    set updated_historic 2
   ]
   [
-    set updated_historic (word "" (historic) "-1")
+    set updated_historic (word "" (historic) "-2")
   ]
 
   let tuple []
@@ -119,7 +119,7 @@ to new_send_agent_to_model
   print("NL: sending this agent to router:")
   print(agent_id)
 
-  let result py:runresult (word "send_agent_to_router('" (agent_id) "', '" tuple "', '" (updated_historic) "')")
+  let result py:runresult (word "send_agent_to_router('" (agent_id) "', '" tuple "', '" (updated_historic) "', '" ("m2") "')")
 
   print("NL: Agent send successfully?")
   print (result)

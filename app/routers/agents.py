@@ -1,9 +1,10 @@
-import pika
 from fastapi import APIRouter
 from pydantic import BaseModel
 
+from app.config import get_strategy
+from app.context_strategy import Context
 from app.database import (get_agents_by_model_name, insert_to_alive,
-                          insert_to_router, update_processed)
+                          insert_to_router, set_out_of_model, update_processed)
 
 router = APIRouter()
 
@@ -12,6 +13,7 @@ class Router(BaseModel):
     agent_id: str
     data: str
     path: str
+    model_name: str
 
 
 class Alive(BaseModel):
@@ -35,7 +37,7 @@ def check_new_agents(model: str | None = None):
         and return the ones that were actually updated.
     """
 
-    updatedRows = update_processed()
+    updatedRows = update_processed(model)
 
     return updatedRows
 
@@ -45,21 +47,25 @@ def model_to_router(data: Router):
     """
     """
 
-    insert_to_router(data)
+    strategy = get_strategy(data)
 
-    connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='rabbitmq')
-    )
+    context = Context(strategy(data))
+    context.run()
+    # insert_to_router(data)
 
-    channel = connection.channel()
-    channel.queue_declare(queue='router')
-    channel.basic_publish(
-        exchange='',
-        routing_key='router',
-        body=data.model
-    )
-
-    connection.close()
+    # connection = pika.BlockingConnection(
+    #     pika.ConnectionParameters(host='rabbitmq')
+    # )
+    #
+    # channel = connection.channel()
+    # channel.queue_declare(queue='router')
+    # channel.basic_publish(
+    #     exchange='',
+    #     routing_key='router',
+    #     body=data.model
+    # )
+    #
+    # connection.close()
 
     return True
 

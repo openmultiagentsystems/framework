@@ -1,4 +1,4 @@
-from strategies.send_to_another import SendToAnother
+from strategies import send_to_m1, send_to_m2
 
 
 def get_strategy(model_name: str):
@@ -13,8 +13,8 @@ def get_strategy(model_name: str):
     """
 
     strategies = {
-        'm1': SendToAnother,
-        'm2': SendToAnother,
+        'm1': send_to_m2,
+        'm2': send_to_m1
     }
 
     return strategies[model_name]

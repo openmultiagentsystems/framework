@@ -34,16 +34,29 @@ def get_agents_by_model_name(name: str):
     return agents
 
 
-def update_processed():
+def set_out_of_model(agent_id, is_out: bool):
+    table = Table('agents')
+    q = Query.update(table).set(table.out_of_model, is_out) \
+        .where(table.id.eq(agent_id)) \
+        .returning('id', 'data', 'path')
+
+    cursor.execute(q.get_sql())
+
+    return cursor.fetchall()
+
+
+def update_processed(model_id):
     """
         Updates every row that has the column
         processed from False to True and
         return the ones who had processed = False
     """
 
+    print(model_id)
+
     table = Table('agents')
     q = Query.update(table).set(table.processed, True).where(
-        table.processed.eq(False)).returning('id', 'data', 'path')
+        table.processed.eq(False) & table.model_id.eq(model_id)).returning('id', 'data', 'path')
 
     updatedRows = []
     try:
