@@ -1,7 +1,4 @@
-extensions [
-  py
-  ; ... your other extensions
-]
+__includes["../agenthandler.nls"]
 
 turtles-own [
   sugar           ;; the amount of sugar this turtle has
@@ -46,33 +43,6 @@ to setup
   set qtd_sended_agents 0
 
 end
-
-to setup-python3
-  py:setup py:python3
-  py:run "import sys"
-  py:run "sys.path.append('/multiagent_models/netlogo')"
-end
-
-to setup-agent-handler
-	setup-python3
-	py:run "from agent_handler import request_to_register"
-end
-
-to setup-receiving-agents
-	setup-python3
-	py:run "from agent_handler import receiving_agents"
-end
-
-to setup-send-agent-to-router
-	setup-python3
-	py:run "from agent_handler import send_agent_to_router"
-end
-
-to setup-send-agents-to-alive
-	setup-python3
-	py:run "from agent_handler import send_agent_to_alive"
-end
-
 
 to new_setup
   load-config-from-file2
