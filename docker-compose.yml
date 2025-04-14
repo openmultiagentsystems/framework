@@ -17,6 +17,16 @@ services:
     depends_on:
       - 'database'
 
+  php:
+    build: './sapi/docker/php'
+    ports: ['9000:9000']
+    volumes: ['./sapi/app/:/var/www/app:cached']
+
+  nginx:
+    build: './sapi/docker/nginx'
+    ports: ['80:80']
+    volumes: ['./sapi/app/:/var/www/app:cached']
+
   database:
       container_name: 'database'
       image: 'pgvector/pgvector:pg17'
