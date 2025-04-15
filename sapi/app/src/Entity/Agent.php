@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\AgentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Table(name: 'agents')]
 #[ORM\Entity(repositoryClass: AgentRepository::class)]
 class Agent
 {
