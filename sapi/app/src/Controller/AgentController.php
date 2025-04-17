@@ -27,11 +27,7 @@ final class AgentController extends AbstractController
         AgentRepository $agents
     ): Response
     {
-        dd($agents->findAll());
-        // dd($agents->updateUnprocessed($modelId));
-
-        return $this->json([
-            'data' => []
-        ]);
+        $processedAgents = $agents->updateUnprocessed($modelId);
+        return $this->json($processedAgents);
     }
 }

@@ -18,16 +18,24 @@ class AgentRepository extends ServiceEntityRepository
 
     public function updateUnprocessed(int $modelId)
     {
-        return $this->createQueryBuilder('a')
-            ->update()
-            ->set('a.processed', ':isProcessed')
-            ->where('a.processed = :notProcessed')
-            ->andWhere('a.model_id = :modelId')
-            ->setParameter('isProcessed', true)
-            ->setParameter('notProcessed', false)
-            ->setParameter('modelId', $modelId)
-            ->getQuery()
-            ->execute();
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            UPDATE agents
+            SET processed = :isProcessed
+            WHERE processed = :notProcessed
+            AND model_id = :modelId
+            RETURNING id, data, path
+        ';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue('isProcessed', 1);
+        $stmt->bindValue('notProcessed', 0);
+        $stmt->bindValue('modelId', $modelId);
+
+        $result = $stmt->executeQuery();
+
+        return $result->fetchAllAssociative();
     }
 
     //    /**
