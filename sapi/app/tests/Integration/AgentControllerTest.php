@@ -25,9 +25,13 @@ class AgentControllerTest extends WebTestCase
         self::$client->request('GET', '/agent/check?modelId=1');
         $res = self::$client->getResponse();
 
-        $resData = json_decode($res->getContent());
+        $resDecoded = json_decode($res->getContent(), true);
+        $data = $resDecoded[0];
 
-        $this->assertIsArray($resData);
-        $this->assertCount(1, $resData);
+        $this->assertIsArray($resDecoded);
+        $this->assertCount(1, $resDecoded);
+        $this->assertArrayHasKey('id', $data);
+        $this->assertArrayHasKey('data', $data);
+        $this->assertArrayHasKey('path', $data);
     }
 }
