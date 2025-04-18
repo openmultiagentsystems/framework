@@ -16,6 +16,13 @@ class AgentRepository extends ServiceEntityRepository
         parent::__construct($registry, Agent::class);
     }
 
+    /**
+     * Updates all the records from the agents table
+     * setting the processed from false to true
+     * 
+     * @param $modelId: the model_id (m1, m2 etc..)
+     * @return all updated records 
+     */
     public function updateUnprocessed(int $modelId)
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -38,28 +45,35 @@ class AgentRepository extends ServiceEntityRepository
         return $result->fetchAllAssociative();
     }
 
-    //    /**
-    //     * @return Agent[] Returns an array of Agent objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('a.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Updates all the records from the agents table
+     * setting the processed from false to true
+     * 
+     * @param $modelId: the model_id (m1, m2 etc..)
+     * @return all updated records 
+     */
+    public function update(array $data, $newAgentId): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
 
-    //    public function findOneBySomeField($value): ?Agent
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        $sql = '
+            UPDATE agents
+            SET data = :data,
+            path = :path,
+            processed = false,
+            model_id = :newAgentId 
+            WHERE id = :agentId
+        ';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue('data', $data['data']);
+        $stmt->bindValue('path', $data['path']);
+        $stmt->bindValue('newAgentId', $newAgentId);
+        $stmt->bindValue('agentId', $data['agent_id']);
+
+        $result = $stmt->executeQuery();
+
+        return $result->fetchAllAssociative();
+
+    }
 }
