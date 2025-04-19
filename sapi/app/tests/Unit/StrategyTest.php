@@ -10,6 +10,7 @@ use App\Utils\RoutingContext;
 use App\Utils\StrategyList;
 
 use App\Tests\FakeStrategy;
+use App\Utils\MoveToM2;
 
 /**
  * Test case for the strategy execution.
@@ -41,8 +42,13 @@ class StrategyTest extends TestCase
      */
     public function test_strategy_list_should_return_correct_strategy()
     {
-        $strategy = StrategyList::get('m1');
-        $this->assertInstanceOf(MoveToM1::class, $strategy);
+        $m1 = $this->createMock(MoveToM1::class);
+        $m2 = $this->createMock(MoveToM2::class);
+
+        $strategyList = new StrategyList($m1, $m2);
+
+        $this->assertSame($m1, $strategyList->get('m1'));
+        $this->assertSame($m2, $strategyList->get('m2'));
     }
 
     /**
@@ -54,6 +60,12 @@ class StrategyTest extends TestCase
     public function test_strategy_list_fails_because_model_name_does_not_exist()
     {
         $this->expectException(\Exception::class);
-        StrategyList::get('m12');
+
+        $strategyList = new StrategyList(
+            $this->createMock(MoveToM1::class),
+            $this->createMock(MoveToM2::class)
+        );
+
+        $strategyList->get('invalid');
     }
 }

@@ -2,12 +2,17 @@
 
 namespace App\Utils;
 
-use App\Utils\RoutingStrategy;
+use App\Repository\AgentRepository;
 
 class MoveToM1 implements RoutingStrategy
 {
-    public function move($data): array
+    const M1_MODEL_ID = 1;
+
+    public function __construct(private AgentRepository $agents)
+    {}
+
+    public function move($data)
     {
-        return [];
+        return $this->agents->update($data, self::M1_MODEL_ID);
     }
 }
