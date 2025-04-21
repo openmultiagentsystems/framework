@@ -18,7 +18,7 @@ class Router(BaseModel):
 
 class Alive(BaseModel):
     agent_id: str
-    model: str
+    model: int
 
 
 @router.get('/agents')
@@ -51,21 +51,6 @@ def model_to_router(data: Router):
 
     context = Context(strategy(data))
     context.run()
-    # insert_to_router(data)
-
-    # connection = pika.BlockingConnection(
-    #     pika.ConnectionParameters(host='rabbitmq')
-    # )
-    #
-    # channel = connection.channel()
-    # channel.queue_declare(queue='router')
-    # channel.basic_publish(
-    #     exchange='',
-    #     routing_key='router',
-    #     body=data.model
-    # )
-    #
-    # connection.close()
 
     return True
 
