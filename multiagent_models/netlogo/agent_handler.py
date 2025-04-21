@@ -181,7 +181,7 @@ def send_agent_to_alive(agent_id, model):
     logger.info('model: ' + str(model))
     logger.info('')
 
-    json = {"agent_id": agent_id, "model": model}
+    json = {"agent_id": agent_id, "model": MODELS[model]}
 
     try:
         res = requests.post(
