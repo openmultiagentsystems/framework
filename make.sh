@@ -1,37 +1,17 @@
 #!/bin/bash
 
-exec_cmd() {
-    docker compose exec "$@"
-}
-
-console() {
-    exec_cmd "$1" bin/console
-}
-
-migrate() {
-    exec_cmd "$1" bin/console doctrine:migrations:migrate
-}
-
-seed() {
-    exec_cmd "$1" bin/console doctrine:fixtures:load
-}
-
-run-model() {
-    exec_cmd "$1" /bin/bash -c "python3 /multiagent_models/netlogo/main.py"
-}
-
 case "$1" in
     console)
-        console "$2"
+        docker compose exec php bin/console $@
         ;;
     migrate)
-        migrate "$2"
+        docker compose exec php bin/console doctrine:migrations:migrate
         ;;
     seed)
-        seed "$2"
+        docker compose exec php bin/console doctrine:fixtures:load
         ;;
     run-model)
-        run-model "$2"
+        docker compose exec "$2" /bin/bash -c "python3 /multiagent_models/netlogo/main.py"
         ;;
     *)
         echo "Usage: $0 {console|migrate|seed|run-model} <service>"
