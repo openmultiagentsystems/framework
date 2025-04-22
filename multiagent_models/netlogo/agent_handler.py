@@ -4,6 +4,7 @@ import json
 import logging
 from enum import Enum
 
+import os
 import pika
 import requests
 from requests import ConnectionError, HTTPError
@@ -37,10 +38,10 @@ connection = pika.BlockingConnection(
 channel = connection.channel()
 channel.queue_declare(queue="register")
 
-API_URL = "http://api:8000/"
-CHECK_NEW_AGENT_URL = API_URL + "check_new_agents"
-MODEL_TO_ROUTER_URL = API_URL + "model_to_router"
-MODEL_TO_ALIVE_URL = API_URL + "model_to_alive"
+API_URL = "http://" + os.environ['api_uri'] + ':' + os.environ['api_port']
+CHECK_NEW_AGENT_URL = API_URL + "/check_new_agents"
+MODEL_TO_ROUTER_URL = API_URL + "/model_to_router"
+MODEL_TO_ALIVE_URL = API_URL + "/model_to_alive"
 
 if __name__ == "__main__":
     print("")

@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: ./app/Dockerfile
     ports:
-        - '8000:8000'
+        - '${API_PORT}:8000'
     env_file:
         - .env
     volumes:
@@ -85,19 +85,16 @@ services:
 
   model_1:
     container_name: model_1
-    build:
-      context: .
-      dockerfile: Dockerfile_NETLOGO
+    build: './multiagent_models/netlogo'
     tty: true
     command: "tail -f"
-    # command: "/bin/sh -c 'python3 /multiagent_models/netlogo/main.py >> /multiagent_models/netlogo/m1/m1_output.txt'"
     environment:
-        - PYTHONUNBUFFERED=1
-        - my_hostname=model_1
-        - model_file=/multiagent_models/netlogo/m1/sugarscape_m1.nlogo
-        - experiment=experiment1
-        - auto_run=True
-        - host=api
+      PYTHONUNBUFFERED: 1
+      model_file: "/multiagent_models/netlogo/m1/sugarscape_m1.nlogo"
+      experiment: "experiment1"
+      auto_run: "True"
+      api_uri: ${API_URI}
+      api_port: ${API_PORT}
     volumes:
       - ./multiagent_models/netlogo:/multiagent_models/netlogo
     depends_on:
@@ -111,14 +108,13 @@ services:
       dockerfile: Dockerfile_NETLOGO
     tty: true
     command: "tail -f"
-    # command: "/bin/sh -c 'python3 /multiagent_models/netlogo/main.py >> /multiagent_models/netlogo/m1/m1_output.txt'"
     environment:
         - PYTHONUNBUFFERED=1
-        - my_hostname=model_2
         - model_file=/multiagent_models/netlogo/m2/sugarscape_m2.nlogo
         - experiment=experiment2
         - auto_run=True
-        - host=api
+        - api_uri=api
+        - api_port=8000
     volumes:
       - ./multiagent_models/netlogo:/multiagent_models/netlogo
     depends_on:

@@ -7,6 +7,7 @@ def execute_model():
         Function that executes the NetLogo model
     """
 
+
     now = datetime.now()
 
     model_file = os.environ['model_file']
