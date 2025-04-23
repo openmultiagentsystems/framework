@@ -18,9 +18,9 @@ class AgentControllerTest extends WebTestCase
         self::$client = static::createClient();
     }
 
-    public function testExample()
+    public function test_get_agent_check_with_modelId_1_shoulf_return_keys()
     {
-        $agent = AgentFactory::createOne();
+        AgentFactory::createOne();
 
         self::$client->request('GET', '/agent/check?modelId=1');
         $res = self::$client->getResponse();

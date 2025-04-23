@@ -1,6 +1,18 @@
 #!/bin/bash
 
+# Author: Bruno Braga <brunobraga@protonmail.com>
+#
+# Streamlines most used commands of the project
+
 case "$1" in
+    setup-test)
+        docker compose exec php bin/console doctrine:database:drop --env=test --force
+        docker compose exec php bin/console doctrine:database:create --env=test
+        docker compose exec php bin/console doctrine:migrations:migrate --env=test --no-interaction
+        ;;
+    test)
+        docker compose exec php ./vendor/bin/phpunit --testdox 
+        ;;
     console)
         docker compose exec php bin/console $@
         ;;
