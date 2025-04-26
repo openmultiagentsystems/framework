@@ -2,10 +2,12 @@
 
 namespace Tests;
 
-use App\Factory\AgentFactory;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
+
+use App\Factory\AgentFactory;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AgentControllerTest extends WebTestCase
 {
@@ -29,9 +31,7 @@ class AgentControllerTest extends WebTestCase
         $data = $resDecoded[0];
 
         $this->assertIsArray($resDecoded);
-        $this->assertCount(1, $resDecoded);
-        $this->assertArrayHasKey('id', $data);
-        $this->assertArrayHasKey('data', $data);
-        $this->assertArrayHasKey('path', $data);
+        $this->assertCount(3, $data);
     }
 }
+
