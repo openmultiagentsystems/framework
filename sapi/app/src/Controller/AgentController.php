@@ -21,12 +21,11 @@ final class AgentController extends AbstractController
         ]);
     }
 
-    #[Route('/agent/check', name: 'app_agent_check', methods: ['GET'])]
+    #[Route('/agents/check', name: 'app_agent_check', methods: ['GET'])]
     public function checkAgents(
         #[MapQueryParameter] int $modelId,
         AgentRepository $agents
-    ): Response
-    {
+    ): Response {
         $processedAgents = $agents->updateUnprocessed($modelId);
         return $this->json($processedAgents);
     }

@@ -22,7 +22,7 @@ final class RoutingController extends AbstractController
         ]);
     }
 
-    #[Route('/routing/agent', name: 'app_routing_agent', methods: ['POST'])]
+    #[Route('/routing/agents', name: 'app_routing_agent', methods: ['POST'])]
     public function route(Request $req): Response
     {
         $data = $req->toArray();

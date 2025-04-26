@@ -30,19 +30,19 @@ def index():
     return get_agents_by_model_name('')
 
 
-@router.get('/check_new_agents')
-def check_new_agents(model: str | None = None):
+@router.get('/agents/check')
+def check_new_agents(modelId: str | None = None):
     """
         Update all records that have processed = false
         and return the ones that were actually updated.
     """
 
-    updatedRows = update_processed(model)
+    updatedRows = update_processed(modelId)
 
     return updatedRows
 
 
-@router.post('/model_to_router')
+@router.post('/routing/agents')
 def model_to_router(data: Router):
     """
     """

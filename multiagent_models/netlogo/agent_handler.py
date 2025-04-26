@@ -2,9 +2,9 @@
 
 import json
 import logging
+import os
 from enum import Enum
 
-import os
 import pika
 import requests
 from requests import ConnectionError, HTTPError
@@ -39,8 +39,8 @@ channel = connection.channel()
 channel.queue_declare(queue="register")
 
 API_URL = "http://" + os.environ['api_uri'] + ':' + os.environ['api_port']
-CHECK_NEW_AGENT_URL = API_URL + "/check_new_agents"
-MODEL_TO_ROUTER_URL = API_URL + "/model_to_router"
+CHECK_NEW_AGENT_URL = API_URL + "/agents/check"
+MODEL_TO_ROUTER_URL = API_URL + "/routing/agents"
 MODEL_TO_ALIVE_URL = API_URL + "/model_to_alive"
 
 if __name__ == "__main__":
@@ -107,9 +107,13 @@ def receiving_agents(model):
     try:
         res = requests.get(
             CHECK_NEW_AGENT_URL,
-            params={"model": MODELS[model]},
+            params={"modelId": MODELS[model]},
             timeout=120
         )
+
+        logger.info('')
+        logger.info(res.json())
+        logger.info('')
 
         return res.json()
     except ConnectionError:
