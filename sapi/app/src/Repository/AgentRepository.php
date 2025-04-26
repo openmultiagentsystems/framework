@@ -42,7 +42,7 @@ class AgentRepository extends ServiceEntityRepository
 
         $result = $stmt->executeQuery();
 
-        return $result->fetchAllAssociative();
+        return $result->fetchAllNumeric();
     }
 
     /**
@@ -74,6 +74,5 @@ class AgentRepository extends ServiceEntityRepository
         $result = $stmt->executeQuery();
 
         return $result->fetchAllAssociative();
-
     }
 }
