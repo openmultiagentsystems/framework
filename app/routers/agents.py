@@ -18,7 +18,7 @@ class Router(BaseModel):
 
 class Alive(BaseModel):
     agent_id: str
-    model: int
+    model_id: int
 
 
 @router.get('/agents')
@@ -55,7 +55,7 @@ def model_to_router(data: Router):
     return True
 
 
-@router.post('/model_to_alive')
+@router.post('/agents/alive')
 def model_to_alive(data: Alive):
     """
     """

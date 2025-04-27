@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\AgentRepository;
+use App\Repository\AliveAgentsRepository;
 use App\Request\AgentCheckRequest;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,5 +29,14 @@ final class AgentController extends AbstractController
     ): Response {
         $processedAgents = $agents->updateUnprocessed($modelId);
         return $this->json($processedAgents);
+    }
+
+    #[Route('/agents/alive', name: 'app_agent_alive', methods: ['POST'])]
+    public function aliveAgents(
+        #[MapQueryParameter] array $data,
+        AliveAgentsRepository $aliveAgents
+    ): Response {
+        $aliveAgents->batchInsert($data);
+        return $this->json([true]);
     }
 }

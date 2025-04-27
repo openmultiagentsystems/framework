@@ -18,7 +18,7 @@ class AliveAgents
     private int $agentId;
 
     #[ORM\Column(type: "string", length: 255)]
-    private string $model;
+    private string $modelId;
 
     #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private \DateTimeInterface $created_at;
@@ -43,14 +43,14 @@ class AliveAgents
         return $this;
     }
 
-    public function getModel(): string
+    public function getModelId(): string
     {
-        return $this->model;
+        return $this->modelId;
     }
 
-    public function setModel(string $model): self
+    public function setModelId(string $modelId): self
     {
-        $this->model = $model;
+        $this->modelId = $modelId;
 
         return $this;
     }

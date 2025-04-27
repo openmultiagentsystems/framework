@@ -39,9 +39,9 @@ channel = connection.channel()
 channel.queue_declare(queue="register")
 
 API_URL = "http://" + os.environ['api_uri'] + ':' + os.environ['api_port']
+MODEL_TO_ALIVE_URL = API_URL + "/agents/alive"
 CHECK_NEW_AGENT_URL = API_URL + "/agents/check"
 MODEL_TO_ROUTER_URL = API_URL + "/routing/agents"
-MODEL_TO_ALIVE_URL = API_URL + "/model_to_alive"
 
 if __name__ == "__main__":
     print("")
@@ -186,7 +186,7 @@ def send_agent_to_alive(agent_id, model):
     logger.info('model: ' + str(model))
     logger.info('')
 
-    json = {"agent_id": agent_id, "model": MODELS[model]}
+    json = {"agent_id": agent_id, "model_id": MODELS[model]}
 
     try:
         res = requests.post(
@@ -194,6 +194,8 @@ def send_agent_to_alive(agent_id, model):
             json=json,
             timeout=120
         )
+
+        print(res.json())
 
         return res.json()
     except ConnectionError:
