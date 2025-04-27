@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use App\Repository\AgentRepository;
 use App\Repository\AliveAgentsRepository;
-use App\Request\AgentCheckRequest;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
@@ -33,9 +33,10 @@ final class AgentController extends AbstractController
 
     #[Route('/agents/alive', name: 'app_agent_alive', methods: ['POST'])]
     public function aliveAgents(
-        #[MapQueryParameter] array $data,
+        Request $req,
         AliveAgentsRepository $aliveAgents
     ): Response {
+        $data = $req->toArray();
         $aliveAgents->batchInsert($data);
         return $this->json([true]);
     }
