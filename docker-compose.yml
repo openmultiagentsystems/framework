@@ -75,8 +75,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile_register
-    environment:
-      llm_register: ${LLM_REGISTER}
     command: "/bin/sh -c 'pymon main.py'"
     working_dir: /register
     tty: true
@@ -112,6 +110,7 @@ services:
       auto_run: "True"
       api_uri: ${API_URI}
       api_port: ${API_PORT}
+      llm_register: ${LLM_REGISTER}
     volumes:
       - ./multiagent_models/netlogo:/multiagent_models/netlogo
     depends_on:
