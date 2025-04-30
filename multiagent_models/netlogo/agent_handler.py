@@ -75,7 +75,9 @@ def request_to_register(model, min, max):
         "type_id": Model_Type.NETLOGO.value,
         "model_id": MODELS[model],
         "min": min,
-        "max": max
+        "max": max,
+        # "llm_register": False
+        "llm_register": os.environ['llm_register']
     })
 
     channel.basic_publish(exchange="", routing_key="register", body=data)
