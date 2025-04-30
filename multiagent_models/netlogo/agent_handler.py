@@ -197,8 +197,6 @@ def send_agent_to_alive(agent_id, model):
             timeout=120
         )
 
-        print(res.json())
-
         return res.json()
     except ConnectionError:
         logger.exception('connection error')
