@@ -22,28 +22,31 @@ def main():
 
         model_data = json.loads(body.decode())
 
-        data = []
-        for number in range(model_data['min'], model_data['max']):
-            arr = []
+        if (os.environ['llm_register']):
+            print('request')
+        else:
+            data = []
+            for number in range(model_data['min'], model_data['max']):
+                arr = []
 
-            arr.append('[')
-            arr.append(str(random.randint(5, 25)))
-            arr.append(' ')
+                arr.append('[')
+                arr.append(str(random.randint(5, 25)))
+                arr.append(' ')
 
-            arr.append(str(random.randint(1, 4)))
-            arr.append(' ')
+                arr.append(str(random.randint(1, 4)))
+                arr.append(' ')
 
-            arr.append(str(random.randint(1, 6)))
-            arr.append(']')
+                arr.append(str(random.randint(1, 6)))
+                arr.append(']')
 
-            arr_string = "".join(arr)
+                arr_string = "".join(arr)
 
-            data.append([
-                model_data['type_id'],
-                str(arr_string),
-                '',
-                model_data['model_id']
-            ])
+                data.append([
+                    model_data['type_id'],
+                    str(arr_string),
+                    '',
+                    model_data['model_id']
+                ])
 
         insert_agent(data)
 

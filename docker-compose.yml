@@ -17,6 +17,21 @@ services:
     depends_on:
       - 'database'
 
+  ollama:
+    image: docker.io/ollama/ollama:latest
+    ports:
+      - 7869:11434
+    volumes:
+      - .:/code
+      - ./ollama/ollama:/root/.ollama
+    container_name: ollama
+    pull_policy: always
+    tty: true
+    restart: always
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+      - OLLAMA_HOST=0.0.0.0
+
   php:
     build: './sapi/docker/php'
     ports: ['9000:9000']
@@ -60,6 +75,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile_register
+    environment:
+      llm_register: ${LLM_REGISTER}
     command: "/bin/sh -c 'pymon main.py'"
     working_dir: /register
     tty: true
