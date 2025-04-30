@@ -4,3 +4,4 @@ pgvector
 pika
 python-dotenv
 py-mon
+requests
