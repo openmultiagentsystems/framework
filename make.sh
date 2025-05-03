@@ -26,6 +26,11 @@ case "$1" in
         docker compose exec php bin/console doctrine:fixtures:load
         ;;
     run-model)
+        if [ ! -f  .env ]; then
+            echo ".env does not exists, please use .env.example to create one"
+            exit 1
+        fi
+
         docker compose exec "$2" /bin/bash -c "python3 /multiagent_models/netlogo/main.py"
         ;;
     *)
