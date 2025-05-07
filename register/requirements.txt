@@ -5,3 +5,4 @@ pika
 python-dotenv
 py-mon
 requests
+openai

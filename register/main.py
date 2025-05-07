@@ -5,9 +5,25 @@ import os
 import random
 import sys
 
+import openai
 import pika
 import requests
 from database import insert_agent
+
+
+def ask_chatgpt(prompt_text):
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "user", "content": prompt_text}
+            ],
+            temperature=0.7
+        )
+        reply = response['choices'][0]['message']['content']
+        return reply
+    except Exception as e:
+        return f"An error occurred: {e}"
 
 
 def main():
@@ -24,24 +40,7 @@ def main():
         model_data = json.loads(body.decode())
 
         if (model_data['llm_register']):
-            res = requests.post(
-                'http://ollama:11434/api/generate',
-                json={
-                    "model": "llama2",
-                    "prompt": "Generate exactly a JSON array with 30 elements. Each element should be of the form: [1, '[odd1 odd2 odd3]', '', 1], where odd1, odd2, and odd3 are random strictly odd integers between 1 and 999. Output only the JSON array, with no explanations or extra text. Format must be valid JSON.",
-                    "stream": False
-                }
-            )
-
-            j = res.json()
-            data = [
-                model_data['type_id'],
-                j['response'].replace('\n', ''),
-                '',
-                model_data['model_id']
-            ]
-
-            print(data)
+            ask_chatgpt('generate data using the following pattern: ')
         else:
             data = []
             for number in range(model_data['min'], model_data['max']):
