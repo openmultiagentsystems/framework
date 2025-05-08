@@ -5,25 +5,43 @@ import os
 import random
 import sys
 
-import openai
 import pika
 import requests
 from database import insert_agent
+from openai import OpenAI
 
 
 def ask_chatgpt(prompt_text):
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "user", "content": prompt_text}
-            ],
-            temperature=0.7
+        client = OpenAI(api_key=os.getenv('OPENAPI_KEY'))
+
+        messages = [
+            {"role": "user", "content": prompt_text}
+        ]
+
+        response = client.chat.completions.create(
+            model='gpt-4o-mini',
+            messages=messages,
+            temperature=0.0,
+            response_format={"type": "json_object"} if True else None
         )
-        reply = response['choices'][0]['message']['content']
-        return reply
+
+        return response.choices[0].message.content
+
     except Exception as e:
         return f"An error occurred: {e}"
+
+
+prompt = """
+    I need an array with 100 arrays that contain 3 numbers each.
+    Do not return a text with the code to generate the array.
+
+    Generate the array for me and return it as JSON like the following
+
+    {
+        "data": [[n1, n2, n3], ...]
+    }
+"""
 
 
 def main():
@@ -40,7 +58,7 @@ def main():
         model_data = json.loads(body.decode())
 
         if (model_data['llm_register']):
-            ask_chatgpt('generate data using the following pattern: ')
+            data = ask_chatgpt(prompt)
         else:
             data = []
             for number in range(model_data['min'], model_data['max']):
@@ -65,6 +83,7 @@ def main():
                     model_data['model_id']
                 ])
 
+        
         # insert_agent(data)
 
     channel.basic_consume(
