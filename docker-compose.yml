@@ -17,6 +17,21 @@ services:
     depends_on:
       - 'database'
 
+  agno:
+    container_name: 'agno'
+    tty: true
+    build:
+      context: .
+      dockerfile: ./Dockerfiles/Dockerfile_agno
+    ports:
+      - 8002:8002
+    env_file:
+      - ./agno/.env
+    volumes:
+      - './agno:/app/'
+    working_dir: /app
+    command: "tail -f"
+
   ollama:
     image: docker.io/ollama/ollama:latest
     ports:
