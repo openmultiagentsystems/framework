@@ -212,3 +212,4 @@ app/vendor/
 ###< symfony/framework-bundle ###
 
 agno/.env
+tinytroupe/.env
