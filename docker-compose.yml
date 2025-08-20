@@ -17,6 +17,22 @@ services:
     depends_on:
       - 'database'
 
+  tinytroupe:
+    container_name: 'tinytroupe'
+    tty: true
+    build:
+      context: .
+      dockerfile: ./Dockerfiles/Dockerfile_tinytroupe
+    ports:
+      - 8003:8003
+    env_file:
+      - ./tinytroupe/.env
+    volumes:
+      - './tiniytroupe:/app/'
+    working_dir: /app
+    command: "tail -f"
+
+
   agno:
     container_name: 'agno'
     tty: true
