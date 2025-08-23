@@ -1,2 +1,0 @@
-FROM arm64v8/gradle:7.4.2-jdk18
-WORKDIR /home/gradle/project
